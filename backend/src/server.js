@@ -19,6 +19,10 @@ app.use(express.json({ limit: "5mb" })); // req.body
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
+app.get("/health", (_, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/ai", aiRoutes);
