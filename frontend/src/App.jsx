@@ -8,7 +8,7 @@ import PageLoader from "./components/PageLoader";
 
 import { Toaster } from "react-hot-toast";
 
-function App() {
+function ProtectedRoute({ children }) {
   const { checkAuth, isCheckingAuth, authUser } = useAuthStore();
 
   useEffect(() => {
@@ -17,10 +17,23 @@ function App() {
 
   if (isCheckingAuth) return <PageLoader />;
 
+  return authUser ? children : <Navigate to="/login" replace />;
+}
+
+function App() {
+  const { authUser } = useAuthStore();
+
   return (
     <div className="min-h-screen bg-surface relative">
       <Routes>
-        <Route path="/" element={authUser ? <ChatPage /> : <Navigate to={"/login"} />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <ChatPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to={"/"} />} />
         <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to={"/"} />} />
       </Routes>
